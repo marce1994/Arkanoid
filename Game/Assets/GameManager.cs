@@ -2,18 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum GameState {
+    Play,
+    Pause,
+    Win,
+    Loose
+}
+
 public class GameManager : MonoBehaviour
 {
+    public GameState gameState;
+    private static GameManager instance;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    public GameManager GetInstance() {
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(this);
+        return instance;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDestroy()
     {
-        
+        if (instance == this)
+            instance = null;
     }
 }
