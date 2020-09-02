@@ -31,6 +31,15 @@ jobs:
         version: ${{ steps.previoustag.outputs.tag }}
     # End
     
+    # Unity Library caching to improve build times
+    - uses: actions/cache@v1.1.0
+      with:
+        path: game/Library
+        key: Library-game-StandaloneWindows64
+        restore-keys: |
+          Library-game-
+          Library-
+
     # Builds unity project
     - name: Unity - Builder
       uses: webbertakken/unity-builder@v1.2
