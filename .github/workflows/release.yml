@@ -11,6 +11,17 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        projectPath:
+          - game
+        unityVersion:
+          - 2019.4.9f1
+        targetPlatform:
+          - StandaloneWindows64 # Build a Windows 64-bit standalone.
+          - WebGL # WebGL.
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -38,14 +49,12 @@ jobs:
         UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
       with:
         # Version of unity to use for building the project.
-        unityVersion: 2019.4.9f1
+        unityVersion: ${{ matrix.unityVersion }}
         # Platform that the build should target.
-        targetPlatform:
-            - StandaloneWindows64
-            - WebGL
+        targetPlatform: ${{ matrix.targetPlatform }}
         # Relative path to the project to be built.
-        projectPath: game
-
+        projectPath: ${{ matrix.projectPath }}
+        
     # Make zip file
     - name: Make zip file
       run: zip -r Game-Win64.zip ./build/StandaloneWindows64
