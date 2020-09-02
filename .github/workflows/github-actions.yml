@@ -1,0 +1,32 @@
+# This is a basic workflow to help you get started with Actions
+name: GithubActions
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    steps:
+    - uses: actions/checkout@v2.2.0
+      with:
+        fetch-depth: 0
+    
+    # Builds unity project
+    - name: Unity - Builder
+      uses: webbertakken/unity-builder@v0.15
+      env:
+        UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+      with:
+        unityVersion: 2019.4.9f1
+        targetPlatform: WebGL
+        projectPath: Game
+        
+    - name: Deploy to GitHub Pages
+      if: success()
+      uses: crazy-max/ghaction-github-pages@v2
+      with:
+        target_branch: gh-pages
+        build_dir: ./build/WebGL
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -11,17 +11,6 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        projectPath:
-          - game
-        unityVersion:
-          - 2019.4.9f1
-        targetPlatform:
-          - StandaloneWindows64 # Build a Windows 64-bit standalone.
-          - WebGL # WebGL.
-
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -49,12 +38,13 @@ jobs:
         UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
       with:
         # Version of unity to use for building the project.
-        unityVersion: ${{ matrix.unityVersion }}
+        unityVersion: 2019.4.9f1
         # Platform that the build should target.
-        targetPlatform: ${{ matrix.targetPlatform }}
+        targetPlatform:
+            - StandaloneWindows64
         # Relative path to the project to be built.
-        projectPath: ${{ matrix.projectPath }}
-        
+        projectPath: game
+
     # Make zip file
     - name: Make zip file
       run: zip -r Game-Win64.zip ./build/StandaloneWindows64
@@ -88,12 +78,3 @@ jobs:
         asset_path: ./Game-Win64.zip
         asset_name: Game-Win64.zip
         asset_content_type: application/zip
-
-    - name: Deploy to GitHub Pages
-      if: success()
-      uses: crazy-max/ghaction-github-pages@v2
-      with:
-        target_branch: gh-pages
-        build_dir: ./build/WebGL
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
