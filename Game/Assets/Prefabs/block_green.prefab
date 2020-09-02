@@ -98,4 +98,4 @@ MonoBehaviour:
   width: 15
   heigth: 7
   radius: 3.6
-  centerOffset: {x: 0, y: 0, z: 0}
+  centerOffset: {x: -0.5, y: 0.5, z: 0}

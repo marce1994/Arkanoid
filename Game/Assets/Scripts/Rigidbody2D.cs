@@ -1,18 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Rigidbody2D : Component
+public class Rigidbody2D : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private Vector3 velocity;
+    private new Transform transform;
+
+    private void Awake()
     {
-        
+        velocity.y = 5;
+        transform = GetComponent<Transform>();
+        var collider = GetComponent<CustomCollider2D>();
+        collider.onCollisionEnter2D += (CustomCollision col) =>
+        {
+            velocity = -velocity + Random.insideUnitSphere;
+            velocity.z = 0;
+            velocity = velocity.normalized;
+        };
     }
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
-        
+        transform.position += velocity * 50.0f * Time.deltaTime;
     }
 }

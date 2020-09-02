@@ -1,20 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class CollisionManager : MonoBehaviour
 {
-    private static CollisionManager collisionManager;
+    private static CollisionManager instance;
     private List<CustomCollider2D> customCollider2Ds;
 
     public bool collideSameLayer;
 
-    public CollisionManager GetInstance() {
-        if (collisionManager == null)
-            collisionManager = this;
-        else
-            Destroy(this.gameObject);
-        return collisionManager;
+    public static CollisionManager GetInstance()
+    {
+        if (instance == null)
+        {
+            instance = FindObjectOfType<CollisionManager>();
+            if (instance == null)
+            {
+                GameObject container = new GameObject("CollisionManager");
+                instance = container.AddComponent<CollisionManager>();
+            }
+        }
+
+        return instance;
     }
 
     public void RegisterCollider(CustomCollider2D customCollider2D) {
@@ -36,6 +42,11 @@ public class CollisionManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
+        if (customCollider2Ds == null) return;
+
+        foreach (var collider in customCollider2Ds)
+        {
+            collider.CalculateCollisions(customCollider2Ds);
+        }
     }
 }

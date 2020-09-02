@@ -1,15 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class RacketController : MonoBehaviour
 {
     public float movementSpeed = 1;
+    public AudioClip clip;
 
     // Start is called before the first frame update
     void Start()
     {
-           
+        var collider = GetComponent<CustomCollider2D>();
+        collider.onCollisionEnter2D += (CustomCollision col) =>
+        {
+            AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position, 1);
+        };
     }
 
     // Update is called once per frame
