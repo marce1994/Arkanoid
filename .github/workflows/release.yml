@@ -40,8 +40,7 @@ jobs:
         # Version of unity to use for building the project.
         unityVersion: 2019.4.9f1
         # Platform that the build should target.
-        targetPlatform:
-            - StandaloneWindows64
+        targetPlatform: StandaloneWindows64
         # Relative path to the project to be built.
         projectPath: game
 
