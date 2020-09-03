@@ -3936,6 +3936,7 @@ GameObject:
   - component: {fileID: 1840286879}
   - component: {fileID: 1840286881}
   - component: {fileID: 1840286882}
+  - component: {fileID: 1840286883}
   m_Layer: 0
   m_Name: ball
   m_TagString: Untagged
@@ -4019,10 +4020,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 567ca621d60180f44bd8bd509fb6d4fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ColliderType: 1
-  width: 3
-  heigth: 2
-  radius: 0
+  ColliderType: 0
+  width: 5.01
+  heigth: 4.02
+  radius: 2.18
   centerOffset: {x: -0.5, y: 0.5, z: 0}
 --- !u!114 &1840286882
 MonoBehaviour:
@@ -4034,6 +4035,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4042486607179a646b25d40da0dcca26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1840286883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1840286878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f974e1643652964e8f2bdca24be2dd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &1844085576 stripped
@@ -4150,7 +4163,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 100
-  clip: {fileID: 8300000, guid: de472a1ad8a2c6a47b81585c589546ae, type: 3}
+  clip: {fileID: 8300000, guid: 4e3305ae304434f47b792cdc5a644f15, type: 3}
 --- !u!114 &1874275834
 MonoBehaviour:
   m_ObjectHideFlags: 0
