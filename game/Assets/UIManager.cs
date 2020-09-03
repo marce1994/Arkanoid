@@ -41,6 +41,15 @@ public class UIManager : MonoBehaviour
         hightScoreText.text = $"{hightScore}";
     }
 
+    private void OnApplicationQuit()
+    {
+        if (score > hightScore)
+            PlayerPrefs.SetInt("hight_score", score);
+
+        if (instance == this)
+            instance = null;
+    }
+
     private void OnDestroy()
     {
         if(score > hightScore)

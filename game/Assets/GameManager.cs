@@ -37,6 +37,12 @@ public class GameManager : MonoBehaviour
     
     }
 
+    private void OnApplicationQuit()
+    {
+        if (instance == this)
+            instance = null;
+    }
+
     private void OnDestroy()
     {
         if (instance == this)

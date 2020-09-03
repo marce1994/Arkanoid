@@ -19,7 +19,8 @@ public class BallController : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(lastCollisionPoint, 1);
-        Gizmos.DrawLine(transform.position, transform.position + velocity * 15);
+        if(transform != null)
+            Gizmos.DrawLine(transform.position, transform.position + velocity * 15);
     }
 
     private void Awake()
@@ -29,7 +30,7 @@ public class BallController : MonoBehaviour
         transform = GetComponent<Transform>();
 
         difficultyMultiplier = 1f;
-        velocity = Vector3.up;
+        velocity = Vector3.up + Vector3.left;
     }
 
     // Start is called before the first frame update
@@ -48,16 +49,8 @@ public class BallController : MonoBehaviour
 
     private void onCollisionEnter(CustomCollision col)
     {
-        if (col.collider.name == "GameOverTrigger")
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            return;
-        }
-
         AudioSource.PlayClipAtPoint(racket_col_audioclip, Camera.main.transform.position, 1);
         
-
-
         if (col.collider.gameObject.name == "racket")
             Debug.Log("golpea la raqueta");
 
@@ -82,13 +75,18 @@ public class BallController : MonoBehaviour
             velocity = (velocity + new Vector3(0.3f, 0)).normalized;
     }
 
+    private void OnBecameInvisible()
+    {
+        transform.position = Vector3.zero;
+        difficultyMultiplier = 1f;
+        velocity = Vector3.up + Vector3.left;
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
     private void Bounce(Vector3 collisionNormal)
     {
         var speed = velocity.magnitude;
-        var direction = Vector3.Reflect(velocity.normalized, collisionNormal);
-
-        direction += new Vector3(0.1f, 0, 0);
-        direction = direction.normalized;
+        var direction = Vector3.Reflect(velocity.normalized, collisionNormal).normalized;
 
         Debug.Log("Out Direction: " + direction);
         Debug.DrawRay(transform.position, velocity.normalized, Color.cyan, 2f);

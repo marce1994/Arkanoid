@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 public enum ColliderType
 {
@@ -182,17 +183,31 @@ public class CustomCollider2D : MonoBehaviour
 
     private bool CircleAABBCollision(Vector2 circlePosition, float circleRadius, Vector2 aabbPosition, Vector2 aabbSize)
     {
-        var distance = new Vector2(Math.Abs(circlePosition.x - aabbPosition.x), Math.Abs(circlePosition.y - aabbPosition.y));
+        var IntersectPoint = new Vector3();
+        var dir = aabbPosition - circlePosition;
+        dir = dir.normalized;
+        dir = dir * circleRadius;
+        var pos = circlePosition + dir;
 
-        if (distance.x > (aabbSize.x / 2 + circleRadius)) { return false; }
-        if (distance.y > (aabbSize.y / 2 + circleRadius)) { return false; }
+        aabbPosition = aabbPosition - new Vector2(aabbSize.x / 2, aabbSize.y / 2);
+        return (aabbPosition.x < pos.x &&
+                aabbPosition.x + aabbSize.x > pos.x &&
+                aabbPosition.y < pos.y &&
+                aabbPosition.y + aabbSize.y > pos.y);
 
-        if (distance.x <= (aabbSize.y / 2)) { return true; }
-        if (distance.y <= (aabbSize.x / 2)) { return true; }
+        //return true;
 
-        var cornerDistance_sq = Math.Pow((distance.x - aabbPosition.x / 2), 2) + Math.Pow((distance.y - aabbPosition.y / 2), 2);
+        //var distance = new Vector2(Math.Abs(circlePosition.x - aabbPosition.x), Math.Abs(circlePosition.y - aabbPosition.y));
 
-        return (cornerDistance_sq <= (Math.Pow(circleRadius, 2)));
+        //if (distance.x > (aabbSize.x / 2 + circleRadius)) { return false; }
+        //if (distance.y > (aabbSize.y / 2 + circleRadius)) { return false; }
+
+        //if (distance.x <= (aabbSize.y / 2)) { return true; }
+        //if (distance.y <= (aabbSize.x / 2)) { return true; }
+
+        //var cornerDistance_sq = Math.Pow((distance.x - aabbPosition.x / 2), 2) + Math.Pow((distance.y - aabbPosition.y / 2), 2);
+
+        //return (cornerDistance_sq <= (Math.Pow(circleRadius, 2)));
     }
 
     private Vector3 GetCollisionPoint(CustomCollider2D col1, CustomCollider2D col2)
