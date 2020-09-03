@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BallController : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class BallController : MonoBehaviour
     private Vector3 velocity;
 
     private Vector3 lastCollisionPoint;
+    private float difficultyMultiplier;
+
+    public AudioClip racket_col_audioclip;
 
     private void OnDrawGizmos()
     {
@@ -24,6 +28,7 @@ public class BallController : MonoBehaviour
         collider = GetComponent<CustomCollider2D>();
         transform = GetComponent<Transform>();
 
+        difficultyMultiplier = 1f;
         velocity = Vector3.up;
     }
 
@@ -35,11 +40,24 @@ public class BallController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.position += velocity * 50.0f * Time.deltaTime;
+        if(difficultyMultiplier < 5)
+            difficultyMultiplier += Time.deltaTime / 10;
+
+        transform.position += velocity * 50.0f * Time.deltaTime * difficultyMultiplier;
     }
 
     private void onCollisionEnter(CustomCollision col)
     {
+        if (col.collider.name == "GameOverTrigger")
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            return;
+        }
+
+        AudioSource.PlayClipAtPoint(racket_col_audioclip, Camera.main.transform.position, 1);
+        
+
+
         if (col.collider.gameObject.name == "racket")
             Debug.Log("golpea la raqueta");
 
@@ -51,8 +69,17 @@ public class BallController : MonoBehaviour
             normal = Vector2.left;
         if (col.collider.name == "border_top")
             normal = Vector2.down;
+        if (col.collider.name == "racket_left")
+            normal = Vector2.up;
+        if (col.collider.name == "racket_right")
+            normal = Vector2.up;
 
         Bounce(normal);
+
+        if (col.collider.name == "racket_left")
+            velocity = (velocity + new Vector3(-0.3f, 0)).normalized;
+        if (col.collider.name == "racket_right")
+            velocity = (velocity + new Vector3(0.3f, 0)).normalized;
     }
 
     private void Bounce(Vector3 collisionNormal)

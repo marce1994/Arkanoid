@@ -12,12 +12,29 @@ public class GameManager : MonoBehaviour
     public GameState gameState;
     private static GameManager instance;
 
-    public GameManager GetInstance() {
+    public static GameManager GetInstance()
+    {
         if (instance == null)
-            instance = this;
-        else if (instance != this)
-            Destroy(this);
+        {
+            instance = FindObjectOfType<GameManager>();
+            if (instance == null)
+            {
+                GameObject container = new GameObject("GameManager");
+                instance = container.AddComponent<GameManager>();
+            }
+        }
+
         return instance;
+    }
+
+    public void RestartGame()
+    {
+        
+    }
+
+    public void AddPoints()
+    {
+    
     }
 
     private void OnDestroy()
