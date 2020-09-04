@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 public enum ColliderType
 {
@@ -23,6 +23,17 @@ public class CustomCollider2D : MonoBehaviour
     public float radius = 0.0f;
 
     public Vector3 centerOffset;
+    private Vector3 prevPosition;
+
+    private Vector2 Center
+    {
+        get { return transform.position + centerOffset; }
+    }
+
+    private Vector2 PrevCenter
+    {
+        get { return prevPosition; }
+    }
 
     private void OnDrawGizmos()
     {
@@ -94,10 +105,10 @@ public class CustomCollider2D : MonoBehaviour
                                     if (CircleAABBCollision(this.transform.position + this.centerOffset, this.radius, collider.transform.position + collider.centerOffset, new Vector2(collider.width, collider.heigth)))
                                     {
                                         if (AddCollider(collider))
-                                            onCollisionEnter2D(new CustomCollision(GetCollisionPoint(this, collider), collider));
+                                            onCollisionEnter2D(new CustomCollision(GetCollisionPoint(this, collider), collider, GetCollisionNormal(this.PrevCenter, GetCollisionPoint(this, collider), collider)));
                                     }
                                     else if (RemoveCollider(collider))
-                                        onCollisionExit2D(new CustomCollision(GetCollisionPoint(this, collider), collider));
+                                        onCollisionExit2D(new CustomCollision(GetCollisionPoint(this, collider), collider, GetCollisionNormal(this.PrevCenter, GetCollisionPoint(this, collider), collider)));
                                 }
                                 break;
                             default:
@@ -114,10 +125,10 @@ public class CustomCollider2D : MonoBehaviour
                                     if (CircleAABBCollision(collider.transform.position + collider.centerOffset, collider.radius, this.transform.position + this.centerOffset, new Vector2(width, heigth)))
                                     {
                                         if (AddCollider(collider))
-                                            onCollisionEnter2D(new CustomCollision(GetCollisionPoint(collider, this), collider));
+                                            onCollisionEnter2D(new CustomCollision(GetCollisionPoint(collider, this), collider, GetCollisionNormal(collider.PrevCenter, GetCollisionPoint(collider, this), this)));
                                     }
                                     else if (RemoveCollider(collider))
-                                        onCollisionExit2D(new CustomCollision(GetCollisionPoint(collider, this), collider));
+                                        onCollisionExit2D(new CustomCollision(GetCollisionPoint(collider, this), collider, GetCollisionNormal(collider.PrevCenter, GetCollisionPoint(collider, this), this)));
                                 }
                                 break;
                             case ColliderType.AABB:
@@ -140,6 +151,8 @@ public class CustomCollider2D : MonoBehaviour
                     break;
             }
         }
+
+        prevPosition = Center;
     }
 
     private bool AddCollider(CustomCollider2D customCollider2D)
@@ -183,39 +196,144 @@ public class CustomCollider2D : MonoBehaviour
 
     private bool CircleAABBCollision(Vector2 circlePosition, float circleRadius, Vector2 aabbPosition, Vector2 aabbSize)
     {
-        var IntersectPoint = new Vector3();
-        var dir = aabbPosition - circlePosition;
+        Vector2 dir = aabbPosition - circlePosition;
         dir = dir.normalized;
         dir = dir * circleRadius;
-        var pos = circlePosition + dir;
+        Vector2 pos = circlePosition + dir;
 
         aabbPosition = aabbPosition - new Vector2(aabbSize.x / 2, aabbSize.y / 2);
         return (aabbPosition.x < pos.x &&
                 aabbPosition.x + aabbSize.x > pos.x &&
                 aabbPosition.y < pos.y &&
                 aabbPosition.y + aabbSize.y > pos.y);
-
-        //return true;
-
-        //var distance = new Vector2(Math.Abs(circlePosition.x - aabbPosition.x), Math.Abs(circlePosition.y - aabbPosition.y));
-
-        //if (distance.x > (aabbSize.x / 2 + circleRadius)) { return false; }
-        //if (distance.y > (aabbSize.y / 2 + circleRadius)) { return false; }
-
-        //if (distance.x <= (aabbSize.y / 2)) { return true; }
-        //if (distance.y <= (aabbSize.x / 2)) { return true; }
-
-        //var cornerDistance_sq = Math.Pow((distance.x - aabbPosition.x / 2), 2) + Math.Pow((distance.y - aabbPosition.y / 2), 2);
-
-        //return (cornerDistance_sq <= (Math.Pow(circleRadius, 2)));
     }
 
     private Vector3 GetCollisionPoint(CustomCollider2D col1, CustomCollider2D col2)
     {
-        //Chequeo circulo con cuadrado.... por ahora => arreglar.
-        var dirVector =  (col2.transform.position + col2.centerOffset) - (col1.transform.position + col1.centerOffset);
+        var dirVector = (col2.transform.position + col2.centerOffset) - (col1.transform.position + col1.centerOffset);
         var closestPoint = dirVector.normalized * col1.radius;
 
         return col1.transform.position + closestPoint;
     }
+
+    private Vector2 GetCollisionNormal(Vector2 spherePosition, Vector2 collisionPoint, CustomCollider2D col) {
+        Vector2 normal = Vector2.zero;
+
+        Vector2 max = col.Center + new Vector2(col.width / 2, col.heigth / 2);
+        Vector2 min = col.Center + new Vector2(-col.width / 2, -col.heigth / 2);
+
+        if (max.x > spherePosition.x && min.x < spherePosition.x)
+            if (spherePosition.x > col.Center.x)
+                normal = Vector2.up;
+            else
+                normal = Vector2.down;
+
+        if (max.y > spherePosition.y && min.y < spherePosition.y)
+            if (spherePosition.y > col.Center.y)
+                normal = Vector2.left;
+            else
+                normal = Vector2.right;
+        /*
+        switch (col.ColliderType)
+        {
+            case ColliderType.Sphere:
+                {
+                    normal = (col.Center - collisionPoint).normalized;
+                }
+                break;
+            case ColliderType.AABB:
+                {
+                    Vector2 max = col.Center + new Vector2(col.width / 2, col.heigth / 2);
+                    Vector2 min = col.Center + new Vector2(-col.width / 2, -col.heigth / 2);
+
+                    if (max.x > spherePosition.x && min.x < spherePosition.x)
+                        if (spherePosition.x > col.Center.x)
+                            normal = Vector2.left;
+                        else
+                            normal = Vector2.right;
+
+                    if (max.y > spherePosition.y && min.y < spherePosition.y)
+                        if (spherePosition.y > col.Center.y)
+                            normal = Vector2.up;
+                        else
+                            normal = Vector2.down;
+
+                    Vector3 center = base.collider.Center;
+                    Vector3 size = new Vector3(base.collider.width, base.collider.heigth);
+
+
+
+                    var rect = new Rect(center, size);
+                    Vector2 acollisionPoint = collisionPoint;
+
+                    collisionPoint = Rect.NormalizedToPoint(rect, (rect.center - acollisionPoint).normalized);
+
+                    if (rect.max.x == collisionPoint.x)
+                        normal = Vector3.right;
+
+                    if (rect.min.x == collisionPoint.x)
+                        normal = Vector3.left;
+
+                    if (rect.max.y == collisionPoint.y)
+                        normal = Vector3.up;
+
+                    if (rect.min.y == collisionPoint.y)
+                        normal = Vector3.right;
+
+                    var a = 0;
+                }
+                break;
+            default:
+                normal = Vector3.zero;
+                break;
+        }*/
+
+        return normal == Vector2.zero? spherePosition - collisionPoint : normal;
+    }
 }
+
+    //private Vector3 GetCollisionNormal(Vector3 collisionPoint, CustomCollider2D collider) {
+    //    var normal = Vector3.zero;
+
+    //    switch (collider.ColliderType)
+    //    {
+    //        case ColliderType.Sphere:
+    //            {
+    //                normal = (collider.centerOffset- collisionPoint).normalized;
+    //            }
+    //            break;
+    //        case ColliderType.AABB:
+    //            {
+    //                Vector3 center = collider.Center;
+    //                Vector3 size = new Vector3(collider.width, collider.heigth);
+
+
+
+    //                //var rect = new Rect(center, size);
+    //                ////Vector2 acollisionPoint = collisionPoint;
+
+    //                ////collisionPoint = Rect.NormalizedToPoint(rect, (rect.center - acollisionPoint).normalized);
+
+    //                //if (rect.max.x == collisionPoint.x)
+    //                //    normal = Vector3.right;
+
+    //                //if (rect.min.x == collisionPoint.x)
+    //                //    normal = Vector3.left;
+
+    //                //if (rect.max.y == collisionPoint.y)
+    //                //    normal = Vector3.up;
+
+    //                //if (rect.min.y == collisionPoint.y)
+    //                //    normal = Vector3.right;
+
+    //                //var a = 0;
+    //            }
+    //            break;
+    //        default:
+    //            normal = Vector3.zero;
+    //            break;
+    //    }
+
+    //    return normal;
+    //}
+//}
