@@ -51,21 +51,15 @@ public class BallController : MonoBehaviour
     {
         AudioSource.PlayClipAtPoint(racket_col_audioclip, Camera.main.transform.position, 1);
 
-        float hitFactorMultiplier = 0f;
         float x = hitFactor(transform.position, col.collider.transform.position, col.collider.width);
         Bounce(col.normal);
 
         Vector2 dir = velocity;
+
         if (col.collider.gameObject.name.Contains("racket"))
-        {
-            hitFactorMultiplier = racketHitFactor;
-            dir = new Vector2(x * hitFactorMultiplier, velocity.y).normalized;
-        }
+            dir = new Vector2(x * racketHitFactor, velocity.y).normalized;
         if (col.collider.gameObject.name.Contains("block"))
-        {
-            hitFactorMultiplier = blockHitFactor;
-            dir = new Vector2(x * hitFactorMultiplier, velocity.y).normalized;
-        }
+            dir = new Vector2(x * blockHitFactor, velocity.y).normalized;
 
         velocity = dir;
     }

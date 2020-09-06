@@ -21,6 +21,12 @@ public class GameManager : MonoBehaviour
 
     public event Action<int> onScorePoints;
 
+    private void Awake()
+    {
+        onRestartGame += () => { Debug.Log("onRestartGame"); };
+        onLossLife += () => { Debug.Log("onLossLife"); };
+    }
+
     public static GameManager GetInstance()
     {
         if (instance == null)
@@ -66,6 +72,8 @@ public class GameManager : MonoBehaviour
     {
         if (instance == this)
             instance = null;
+
+        onLossLife = null;
     }
 
     private void OnDestroy()
