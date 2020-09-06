@@ -81,7 +81,7 @@ public class UIManager : MonoBehaviour
     void UpdateUI() {
         scoreText.text = $"{score}";
         hightScoreText.text = $"{hightScore}";
-        lifesText.text = $"Lifes: {lifes}";
+        lifesText.text = $"Lives: {lifes}";
     }
 
     private void OnApplicationQuit()
