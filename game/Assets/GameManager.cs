@@ -72,5 +72,7 @@ public class GameManager : MonoBehaviour
     {
         if (instance == this)
             instance = null;
+
+        onLossLife = null;
     }
 }

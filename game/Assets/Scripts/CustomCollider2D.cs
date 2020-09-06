@@ -70,78 +70,84 @@ public class CustomCollider2D : MonoBehaviour
 
     public void CalculateCollisions(IEnumerable<CustomCollider2D> colliders)
     {
-        foreach (var collider in colliders)
+        try
         {
-            if (collider == this) continue;
-            switch (ColliderType)
+            foreach (var collider in colliders)
             {
-                case ColliderType.Sphere:
-                    {
-                        switch (collider.ColliderType)
+                if (collider == this) continue;
+                switch (ColliderType)
+                {
+                    case ColliderType.Sphere:
                         {
-                            case ColliderType.Sphere:
-                                {
-                                    if (CircleCollision(this.transform.position + this.centerOffset, this.radius, collider.transform.position + collider.centerOffset, collider.radius))
+                            switch (collider.ColliderType)
+                            {
+                                case ColliderType.Sphere:
                                     {
-                                        if (AddCollider(collider))
-                                            onCollisionEnter2D(new CustomCollision(collider.transform.position + collider.centerOffset, collider));
+                                        if (CircleCollision(this.transform.position + this.centerOffset, this.radius, collider.transform.position + collider.centerOffset, collider.radius))
+                                        {
+                                            if (AddCollider(collider))
+                                                onCollisionEnter2D(new CustomCollision(collider.transform.position + collider.centerOffset, collider));
+                                        }
+                                        else if (RemoveCollider(collider))
+                                            onCollisionExit2D(new CustomCollision(collider.transform.position + collider.centerOffset, collider));
                                     }
-                                    else if (RemoveCollider(collider))
-                                        onCollisionExit2D(new CustomCollision(collider.transform.position + collider.centerOffset, collider));
-                                }
-                                break;
-                            case ColliderType.AABB:
-                                {
-                                    if (CircleAABBCollision(this.transform.position + this.centerOffset, this.radius, collider.transform.position + collider.centerOffset, new Vector2(collider.width, collider.heigth)))
+                                    break;
+                                case ColliderType.AABB:
                                     {
-                                        if (AddCollider(collider))
-                                            onCollisionEnter2D(new CustomCollision(GetCollisionPoint(this, collider), collider, GetCollisionNormal(this.PrevCenter, GetCollisionPoint(this, collider), collider)));
+                                        if (CircleAABBCollision(this.transform.position + this.centerOffset, this.radius, collider.transform.position + collider.centerOffset, new Vector2(collider.width, collider.heigth)))
+                                        {
+                                            if (AddCollider(collider))
+                                                onCollisionEnter2D(new CustomCollision(GetCollisionPoint(this, collider), collider, GetCollisionNormal(this.PrevCenter, GetCollisionPoint(this, collider), collider)));
+                                        }
+                                        else if (RemoveCollider(collider))
+                                            onCollisionExit2D(new CustomCollision(GetCollisionPoint(this, collider), collider, GetCollisionNormal(this.PrevCenter, GetCollisionPoint(this, collider), collider)));
                                     }
-                                    else if (RemoveCollider(collider))
-                                        onCollisionExit2D(new CustomCollision(GetCollisionPoint(this, collider), collider, GetCollisionNormal(this.PrevCenter, GetCollisionPoint(this, collider), collider)));
-                                }
-                                break;
-                            default:
-                                break;
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
-                    }
-                    break;
-                case ColliderType.AABB:
-                    {
-                        switch (collider.ColliderType)
+                        break;
+                    case ColliderType.AABB:
                         {
-                            case ColliderType.Sphere:
-                                {
-                                    if (CircleAABBCollision(collider.transform.position + collider.centerOffset, collider.radius, this.transform.position + this.centerOffset, new Vector2(width, heigth)))
+                            switch (collider.ColliderType)
+                            {
+                                case ColliderType.Sphere:
                                     {
-                                        if (AddCollider(collider))
-                                            onCollisionEnter2D(new CustomCollision(GetCollisionPoint(collider, this), collider, GetCollisionNormal(collider.PrevCenter, GetCollisionPoint(collider, this), this)));
+                                        if (CircleAABBCollision(collider.transform.position + collider.centerOffset, collider.radius, this.transform.position + this.centerOffset, new Vector2(width, heigth)))
+                                        {
+                                            if (AddCollider(collider))
+                                                onCollisionEnter2D(new CustomCollision(GetCollisionPoint(collider, this), collider, GetCollisionNormal(collider.PrevCenter, GetCollisionPoint(collider, this), this)));
+                                        }
+                                        else if (RemoveCollider(collider))
+                                            onCollisionExit2D(new CustomCollision(GetCollisionPoint(collider, this), collider, GetCollisionNormal(collider.PrevCenter, GetCollisionPoint(collider, this), this)));
                                     }
-                                    else if (RemoveCollider(collider))
-                                        onCollisionExit2D(new CustomCollision(GetCollisionPoint(collider, this), collider, GetCollisionNormal(collider.PrevCenter, GetCollisionPoint(collider, this), this)));
-                                }
-                                break;
-                            case ColliderType.AABB:
-                                {
-                                    if (AABBCollision(transform.position + centerOffset, new Vector2(width, heigth), collider.transform.position + collider.centerOffset, new Vector2(collider.width, collider.heigth)))
+                                    break;
+                                case ColliderType.AABB:
                                     {
-                                        if (AddCollider(collider))
-                                            onCollisionEnter2D(new CustomCollision(collider.transform.position + collider.centerOffset, collider));
+                                        if (AABBCollision(transform.position + centerOffset, new Vector2(width, heigth), collider.transform.position + collider.centerOffset, new Vector2(collider.width, collider.heigth)))
+                                        {
+                                            if (AddCollider(collider))
+                                                onCollisionEnter2D(new CustomCollision(collider.transform.position + collider.centerOffset, collider));
+                                        }
+                                        else if (RemoveCollider(collider))
+                                            onCollisionExit2D(new CustomCollision(collider.transform.position + collider.centerOffset, collider));
                                     }
-                                    else if (RemoveCollider(collider))
-                                        onCollisionExit2D(new CustomCollision(collider.transform.position + collider.centerOffset, collider));
-                                }
-                                break;
-                            default:
-                                break;
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
-                    }
-                    break;
-                default:
-                    break;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
-
+        catch (Exception e)
+        {
+            Debug.LogWarning(e.Message);
+        }
         prevPosition = Center;
     }
 
