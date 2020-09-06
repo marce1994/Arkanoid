@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum GameState {
     Play,
@@ -11,6 +15,11 @@ public class GameManager : MonoBehaviour
 {
     public GameState gameState;
     private static GameManager instance;
+
+    public event Action onRestartGame;
+    public event Action onLossLife;
+
+    public event Action<int> onScorePoints;
 
     public static GameManager GetInstance()
     {
@@ -29,12 +38,28 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
-        
+        onRestartGame();
+        StartCoroutine(ReloadScene());
     }
 
-    public void AddPoints()
+    public void LossLife()
     {
-    
+        onLossLife();
+    }
+
+    public void AddPoints(int points)
+    {
+        onScorePoints(points);
+        if (GameObject.FindGameObjectsWithTag("Block").Count() > 0) return;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private IEnumerator ReloadScene()
+    {
+        Time.timeScale = 0;
+        yield return new WaitForSecondsRealtime(5);
+        Time.timeScale = 1;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     private void OnApplicationQuit()

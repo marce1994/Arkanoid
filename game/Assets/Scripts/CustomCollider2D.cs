@@ -25,12 +25,12 @@ public class CustomCollider2D : MonoBehaviour
     public Vector3 centerOffset;
     private Vector3 prevPosition;
 
-    private Vector2 Center
+    public Vector2 Center
     {
         get { return transform.position + centerOffset; }
     }
 
-    private Vector2 PrevCenter
+    public Vector2 PrevCenter
     {
         get { return prevPosition; }
     }
@@ -59,16 +59,6 @@ public class CustomCollider2D : MonoBehaviour
     private void Awake()
     {
         CollisionManager.GetInstance().RegisterCollider(this);
-
-        onCollisionEnter2D += (CustomCollision col) =>
-        {
-            Debug.Log("CollisionEnter!");
-        };
-
-        onCollisionExit2D += (CustomCollision col) =>
-        {
-            Debug.Log("CollisionExit!");
-        };
     }
 
     private void OnDestroy()
@@ -291,49 +281,3 @@ public class CustomCollider2D : MonoBehaviour
         return normal == Vector2.zero? spherePosition - collisionPoint : normal;
     }
 }
-
-    //private Vector3 GetCollisionNormal(Vector3 collisionPoint, CustomCollider2D collider) {
-    //    var normal = Vector3.zero;
-
-    //    switch (collider.ColliderType)
-    //    {
-    //        case ColliderType.Sphere:
-    //            {
-    //                normal = (collider.centerOffset- collisionPoint).normalized;
-    //            }
-    //            break;
-    //        case ColliderType.AABB:
-    //            {
-    //                Vector3 center = collider.Center;
-    //                Vector3 size = new Vector3(collider.width, collider.heigth);
-
-
-
-    //                //var rect = new Rect(center, size);
-    //                ////Vector2 acollisionPoint = collisionPoint;
-
-    //                ////collisionPoint = Rect.NormalizedToPoint(rect, (rect.center - acollisionPoint).normalized);
-
-    //                //if (rect.max.x == collisionPoint.x)
-    //                //    normal = Vector3.right;
-
-    //                //if (rect.min.x == collisionPoint.x)
-    //                //    normal = Vector3.left;
-
-    //                //if (rect.max.y == collisionPoint.y)
-    //                //    normal = Vector3.up;
-
-    //                //if (rect.min.y == collisionPoint.y)
-    //                //    normal = Vector3.right;
-
-    //                //var a = 0;
-    //            }
-    //            break;
-    //        default:
-    //            normal = Vector3.zero;
-    //            break;
-    //    }
-
-    //    return normal;
-    //}
-//}

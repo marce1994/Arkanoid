@@ -14,27 +14,29 @@ public class RacketController : MonoBehaviour
         var sideColliders = GetComponentsInChildren<CustomCollider2D>();
         foreach (var collider in sideColliders)
         {
-            collider.onCollisionEnter2D += (CustomCollision col) =>
-            {
-                if (!col.collider.name.Contains("border")) return;
-
-                if (col.collisionPoint.x > transform.position.x)
-                    rigthCollider = true;
-                if (col.collisionPoint.x < transform.position.x)
-                    leftCollider = true;
-
-            };
-
-            collider.onCollisionExit2D += (CustomCollision col) =>
-            {
-                if (!col.collider.name.Contains("border")) return;
-
-                if (col.collisionPoint.x > transform.position.x)
-                    rigthCollider = false;
-                if (col.collisionPoint.x < transform.position.x)
-                    leftCollider = false;
-            };
+            collider.onCollisionEnter2D += onCollisionEnter2D;
+            collider.onCollisionExit2D += onCollisionExit2D;
         }
+    }
+
+    private void onCollisionEnter2D(CustomCollision col)
+    {
+        if (!col.collider.name.Contains("border")) return;
+
+        if (col.collisionPoint.x > transform.position.x)
+            rigthCollider = true;
+        if (col.collisionPoint.x < transform.position.x)
+            leftCollider = true;
+    }
+
+    private void onCollisionExit2D(CustomCollision col)
+    {
+        if (!col.collider.name.Contains("border")) return;
+
+        if (col.collisionPoint.x > transform.position.x)
+            rigthCollider = false;
+        if (col.collisionPoint.x < transform.position.x)
+            leftCollider = false;
     }
 
     // Update is called once per frame

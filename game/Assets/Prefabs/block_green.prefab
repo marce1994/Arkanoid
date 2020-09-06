@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -5324645432800496631}
   m_Layer: 0
   m_Name: block_green
-  m_TagString: Untagged
+  m_TagString: Block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -112,3 +112,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f03ce72c3fbd1b94795ae7db12638b7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  points: 10

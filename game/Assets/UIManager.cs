@@ -7,17 +7,25 @@ public class UIManager : MonoBehaviour
 {
     public Text scoreText;
     public Text hightScoreText;
+    public Text lifesText;
 
     int score;
     int hightScore;
+    int lifes;
 
     private static UIManager instance;
 
-    public UIManager GetInstance() {
+    public static UIManager GetInstance()
+    {
         if (instance == null)
-            instance = this;
-        else if (instance != this)
-            Destroy(this);
+        {
+            instance = FindObjectOfType<UIManager>();
+            if (instance == null)
+            {
+                GameObject container = new GameObject("UIManager");
+                instance = container.AddComponent<UIManager>();
+            }
+        }
 
         return instance;
     }
@@ -26,7 +34,41 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         score = 0;
+        lifes = 3;
         hightScore = PlayerPrefs.GetInt("hight_score", 0);
+        UpdateUI();
+
+        var gameManager = GameManager.GetInstance();
+
+        gameManager.onRestartGame += onRestartGame;
+        gameManager.onScorePoints += onRestartGame;
+        gameManager.onLossLife += onLossLife;
+    }
+
+    private void onRestartGame(int score)
+    {
+        this.score += score;
+        UpdateUI();
+    }
+
+    private void onLossLife()
+    {
+        lifes --;
+        UpdateUI();
+        if (lifes <= 0)
+        {
+            var gameManager = GameManager.GetInstance();
+            if (score > hightScore)
+                PlayerPrefs.SetInt("hight_score", score);
+            score = 0;
+            gameManager.RestartGame();
+        }
+    }
+
+    private void onRestartGame()
+    {
+        if (score > hightScore)
+            PlayerPrefs.SetInt("hight_score", score);
         UpdateUI();
     }
 
@@ -39,6 +81,7 @@ public class UIManager : MonoBehaviour
     void UpdateUI() {
         scoreText.text = $"{score}";
         hightScoreText.text = $"{hightScore}";
+        lifesText.text = $"Lifes: {lifes}";
     }
 
     private void OnApplicationQuit()
@@ -54,6 +97,11 @@ public class UIManager : MonoBehaviour
     {
         if(score > hightScore)
             PlayerPrefs.SetInt("hight_score", score);
+
+        var gameManager = GameManager.GetInstance();
+        gameManager.onRestartGame -= onRestartGame;
+        gameManager.onScorePoints -= onRestartGame;
+        gameManager.onLossLife -= onLossLife;
 
         if (instance == this)
             instance = null;

@@ -14,6 +14,9 @@ public class BallController : MonoBehaviour
 
     public AudioClip racket_col_audioclip;
 
+    public float racketHitFactor = 1f;
+    public float blockHitFactor = .8f;
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
@@ -47,14 +50,36 @@ public class BallController : MonoBehaviour
     private void onCollisionEnter(CustomCollision col)
     {
         AudioSource.PlayClipAtPoint(racket_col_audioclip, Camera.main.transform.position, 1);
-        
-        //if (col.collider.gameObject.name == "racket")
-        //    Debug.Log("golpea la raqueta");
 
-        lastCollisionPoint = col.collisionPoint;
-        var normal = col.normal;
+        float hitFactorMultiplier = 0f;
+        float x = hitFactor(transform.position, col.collider.transform.position, col.collider.width);
+        Bounce(col.normal);
 
-        Bounce(normal);
+        Vector2 dir = velocity;
+        if (col.collider.gameObject.name.Contains("racket"))
+        {
+            hitFactorMultiplier = racketHitFactor;
+            dir = new Vector2(x * hitFactorMultiplier, velocity.y).normalized;
+        }
+        if (col.collider.gameObject.name.Contains("block"))
+        {
+            hitFactorMultiplier = blockHitFactor;
+            dir = new Vector2(x * hitFactorMultiplier, velocity.y).normalized;
+        }
+
+        velocity = dir;
+    }
+
+    private float hitFactor(Vector2 ballPos, Vector2 racketPos, float racketWidth)
+    {
+        return (ballPos.x - racketPos.x) / racketWidth;
+    }
+
+    private void Bounce(Vector3 collisionNormal)
+    {
+        var speed = velocity.magnitude;
+        var direction = Vector3.Reflect(velocity.normalized, collisionNormal).normalized;
+        velocity = direction * Mathf.Max(speed, 1);
     }
 
     private void OnBecameInvisible()
@@ -62,16 +87,6 @@ public class BallController : MonoBehaviour
         transform.position = Vector3.zero;
         difficultyMultiplier = 1f;
         velocity = Vector3.up + Vector3.left;
-    }
-
-    private void Bounce(Vector3 collisionNormal)
-    {
-        var speed = velocity.magnitude;
-        var direction = Vector3.Reflect(velocity.normalized, collisionNormal).normalized;
-
-        Debug.Log("Out Direction: " + direction);
-        Debug.DrawRay(transform.position, velocity.normalized, Color.cyan, 2f);
-        Debug.DrawRay(transform.position, collisionNormal, Color.magenta, 2f);
-        velocity = direction * Mathf.Max(speed, 1);
+        GameManager.GetInstance().LossLife();
     }
 }
