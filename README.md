@@ -3,3 +3,10 @@
 # Arkanoid (Unity v2019.4.9f1)
 
 - Copia de Arkanoid con unity3D con implementacion propia de colisiones
+
+# Integrantes
+
+- Alan Krulfeld
+- Ignacio Fernandez Lemos
+- Mauricio Salazar
+- Pablo Bianco
