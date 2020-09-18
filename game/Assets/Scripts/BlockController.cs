@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BlockController : MonoBehaviour
 {
@@ -11,7 +9,7 @@ public class BlockController : MonoBehaviour
     void Start()
     {
         collider = GetComponent<CustomCollider2D>();
-        collider.onCollisionEnter2D += onCollisionEnter;
+        collider.OnCollisionEnter2D += onCollisionEnter;
     }
 
     private void onCollisionEnter(CustomCollision col)
@@ -22,6 +20,6 @@ public class BlockController : MonoBehaviour
 
     private void OnDestroy()
     {
-        collider.onCollisionEnter2D -= onCollisionEnter;
+        collider.OnCollisionEnter2D -= onCollisionEnter;
     }
 }

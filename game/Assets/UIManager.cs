@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -9,9 +7,9 @@ public class UIManager : MonoBehaviour
     public Text hightScoreText;
     public Text lifesText;
 
-    int score;
-    int hightScore;
-    int lifes;
+    private int score;
+    private int hightScore;
+    private int lives;
 
     private static UIManager instance;
 
@@ -30,19 +28,19 @@ public class UIManager : MonoBehaviour
         return instance;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         score = 0;
-        lifes = 3;
+        lives = 3;
+
         hightScore = PlayerPrefs.GetInt("hight_score", 0);
         UpdateUI();
 
         var gameManager = GameManager.GetInstance();
 
-        gameManager.onRestartGame += onRestartGame;
-        gameManager.onScorePoints += onRestartGame;
-        gameManager.onLossLife += onLossLife;
+        gameManager.OnRestartGame += onRestartGame;
+        gameManager.OnScorePoints += onRestartGame;
+        gameManager.OnLossLife += onLossLife;
     }
 
     private void onRestartGame(int score)
@@ -53,11 +51,11 @@ public class UIManager : MonoBehaviour
 
     private void onLossLife()
     {
-        lifes --;
+        lives--;
         UpdateUI();
-        if (lifes <= 0)
+        if (lives <= 0)
         {
-            var gameManager = GameManager.GetInstance();
+            GameManager gameManager = GameManager.GetInstance();
             if (score > hightScore)
                 PlayerPrefs.SetInt("hight_score", score);
             score = 0;
@@ -78,10 +76,11 @@ public class UIManager : MonoBehaviour
         UpdateUI();
     }
 
-    void UpdateUI() {
+    private void UpdateUI()
+    {
         scoreText.text = $"{score}";
         hightScoreText.text = $"{hightScore}";
-        lifesText.text = $"Lives: {lifes}";
+        lifesText.text = $"Lives: {lives}";
     }
 
     private void OnApplicationQuit()
@@ -95,13 +94,13 @@ public class UIManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        if(score > hightScore)
+        if (score > hightScore)
             PlayerPrefs.SetInt("hight_score", score);
 
-        var gameManager = GameManager.GetInstance();
-        gameManager.onRestartGame -= onRestartGame;
-        gameManager.onScorePoints -= onRestartGame;
-        gameManager.onLossLife -= onLossLife;
+        GameManager gameManager = GameManager.GetInstance();
+        gameManager.OnRestartGame -= onRestartGame;
+        gameManager.OnScorePoints -= onRestartGame;
+        gameManager.OnLossLife -= onLossLife;
 
         if (instance == this)
             instance = null;

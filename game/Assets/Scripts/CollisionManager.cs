@@ -44,9 +44,15 @@ public class CollisionManager : MonoBehaviour
     {
         if (customCollider2Ds == null) return;
 
-        foreach (var collider in customCollider2Ds)
+        foreach (CustomCollider2D collider in customCollider2Ds)
         {
             collider.CalculateCollisions(customCollider2Ds);
         }
+    }
+
+    private void OnDestroy()
+    {
+        if (instance == this)
+            instance = null;
     }
 }

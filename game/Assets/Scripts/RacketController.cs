@@ -8,14 +8,13 @@ public class RacketController : MonoBehaviour
     bool rigthCollider = false;
     bool leftCollider = false;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         var sideColliders = GetComponentsInChildren<CustomCollider2D>();
-        foreach (var collider in sideColliders)
+        foreach (CustomCollider2D collider in sideColliders)
         {
-            collider.onCollisionEnter2D += onCollisionEnter2D;
-            collider.onCollisionExit2D += onCollisionExit2D;
+            collider.OnCollisionEnter2D += onCollisionEnter2D;
+            collider.OnCollisionExit2D += onCollisionExit2D;
         }
     }
 
@@ -39,13 +38,12 @@ public class RacketController : MonoBehaviour
             leftCollider = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         HandleInputs();    
     }
 
-    void HandleInputs() {
+    private void HandleInputs() {
         if(!leftCollider)
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
                 transform.position += Vector3.left * Time.deltaTime * movementSpeed;

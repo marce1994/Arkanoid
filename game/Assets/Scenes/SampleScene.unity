@@ -3953,6 +3953,7 @@ GameObject:
   - component: {fileID: 1840286879}
   - component: {fileID: 1840286881}
   - component: {fileID: 1840286883}
+  - component: {fileID: 1840286882}
   m_Layer: 0
   m_Name: ball
   m_TagString: Untagged
@@ -4041,6 +4042,19 @@ MonoBehaviour:
   heigth: 4.02
   radius: 2.18
   centerOffset: {x: -0.5, y: 0.5, z: 0}
+--- !u!114 &1840286882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1840286878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37a3ce46cb7d75f4f8cc10af86efbf8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 1
 --- !u!114 &1840286883
 MonoBehaviour:
   m_ObjectHideFlags: 0

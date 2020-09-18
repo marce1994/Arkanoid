@@ -4,27 +4,27 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum GameState {
-    Play,
-    Pause,
-    Win,
-    Loose
-}
+//public enum GameState {
+//    Play,
+//    Pause,
+//    Win,
+//    Loose
+//}
 
 public class GameManager : MonoBehaviour
 {
-    public GameState gameState;
+    //public GameState gameState;
     private static GameManager instance;
 
-    public event Action onRestartGame;
-    public event Action onLossLife;
+    public event Action OnRestartGame;
+    public event Action OnLossLife;
 
-    public event Action<int> onScorePoints;
+    public event Action<int> OnScorePoints;
 
     private void Awake()
     {
-        onRestartGame += () => { Debug.Log("onRestartGame"); };
-        onLossLife += () => { Debug.Log("onLossLife"); };
+        OnRestartGame += () => { Debug.Log("onRestartGame"); };
+        OnLossLife += () => { Debug.Log("onLossLife"); };
     }
 
     public static GameManager GetInstance()
@@ -44,18 +44,18 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
-        onRestartGame();
+        OnRestartGame();
         StartCoroutine(ReloadScene());
     }
 
     public void LossLife()
     {
-        onLossLife();
+        OnLossLife();
     }
 
     public void AddPoints(int points)
     {
-        onScorePoints(points);
+        OnScorePoints(points);
         if (GameObject.FindGameObjectsWithTag("Block").Count() > 0) return;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
         if (instance == this)
             instance = null;
 
-        onLossLife = null;
+        OnLossLife = null;
     }
 
     private void OnDestroy()
@@ -81,6 +81,6 @@ public class GameManager : MonoBehaviour
         if (instance == this)
             instance = null;
 
-        onLossLife = null;
+        OnLossLife = null;
     }
 }

@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
     private new CustomCollider2D collider;
     private new Transform transform;
-    private Vector3 velocity;
+    private new CustomRigidBody2D rigidbody;
 
     private Vector3 lastCollisionPoint;
     private float difficultyMultiplier;
@@ -22,21 +19,21 @@ public class BallController : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(lastCollisionPoint, 1);
         if(transform != null)
-            Gizmos.DrawLine(transform.position, transform.position + velocity * 15);
+            Gizmos.DrawLine(transform.position, transform.position + rigidbody.Velocity * 15);
     }
 
     private void Awake()
     {
         collider = GetComponent<CustomCollider2D>();
         transform = GetComponent<Transform>();
+        rigidbody = GetComponent<CustomRigidBody2D>();
 
         difficultyMultiplier = 1f;
-        velocity = Vector3.up + Vector3.left;
     }
 
     void Start()
     {
-        collider.onCollisionEnter2D += onCollisionEnter;
+        collider.OnCollisionEnter2D += onCollisionEnter;
     }
 
     private void Update()
@@ -44,7 +41,7 @@ public class BallController : MonoBehaviour
         if(difficultyMultiplier < 5)
             difficultyMultiplier += Time.deltaTime / 10;
 
-        transform.position += velocity * 50.0f * Time.deltaTime * difficultyMultiplier;
+        rigidbody.mass = difficultyMultiplier;
     }
 
     private void onCollisionEnter(CustomCollision col)
@@ -54,14 +51,14 @@ public class BallController : MonoBehaviour
         float x = hitFactor(transform.position, col.collider.transform.position, col.collider.width);
         Bounce(col.normal);
 
-        Vector2 dir = velocity;
+        Vector2 dir = rigidbody.Velocity;
 
         if (col.collider.gameObject.name.Contains("racket"))
-            dir = new Vector2(x * racketHitFactor, velocity.y).normalized;
+            dir = new Vector2(x * racketHitFactor, rigidbody.Velocity.y).normalized;
         if (col.collider.gameObject.name.Contains("block"))
-            dir = new Vector2(x * blockHitFactor, velocity.y).normalized;
+            dir = new Vector2(x * blockHitFactor, rigidbody.Velocity.y).normalized;
 
-        velocity = dir;
+        rigidbody.Velocity = dir;
     }
 
     private float hitFactor(Vector2 ballPos, Vector2 racketPos, float racketWidth)
@@ -71,16 +68,16 @@ public class BallController : MonoBehaviour
 
     private void Bounce(Vector3 collisionNormal)
     {
-        var speed = velocity.magnitude;
-        var direction = Vector3.Reflect(velocity.normalized, collisionNormal).normalized;
-        velocity = direction * Mathf.Max(speed, 1);
+        float speed = rigidbody.Velocity.magnitude;
+        Vector3 direction = Vector3.Reflect(rigidbody.Velocity.normalized, collisionNormal).normalized;
+        rigidbody.Velocity = direction * Mathf.Max(speed, 1);
     }
 
     private void OnBecameInvisible()
     {
         transform.position = Vector3.zero;
         difficultyMultiplier = 1f;
-        velocity = Vector3.up + Vector3.left;
+        rigidbody.Velocity = Vector3.up + Vector3.left;
         GameManager.GetInstance().LossLife();
     }
 }
