@@ -4,7 +4,7 @@ using UnityEngine;
 public class CollisionManager : MonoBehaviour
 {
     private static CollisionManager instance;
-    private List<CustomCollider2D> customCollider2Ds;
+    private List<CustomCollider2D> customSphereColliders2Ds;
 
     public bool collideSameLayer;
 
@@ -23,31 +23,31 @@ public class CollisionManager : MonoBehaviour
         return instance;
     }
 
-    public void RegisterCollider(CustomCollider2D customCollider2D) {
-        if (customCollider2Ds == null)
-            customCollider2Ds = new List<CustomCollider2D>();
-        
-        if (customCollider2Ds.Contains(customCollider2D))
+    public void RegisterCollider(CustomCollider2D collider)
+    {
+        if (customSphereColliders2Ds == null)
+            customSphereColliders2Ds = new List<CustomCollider2D>();
+
+        if (customSphereColliders2Ds.Contains(collider))
             return;
 
-        customCollider2Ds.Add(customCollider2D);
+        customSphereColliders2Ds.Add(collider);
     }
 
-    public void UnregisterCollider(CustomCollider2D customCollider2D) {
-        if (customCollider2Ds == null)
+    public void UnregisterCollider(CustomCollider2D collider)
+    {
+        if (customSphereColliders2Ds == null)
             return;
 
-        customCollider2Ds.Remove(customCollider2D);
+        customSphereColliders2Ds.Remove(collider);
     }
 
     private void Update()
     {
-        if (customCollider2Ds == null) return;
+        if (customSphereColliders2Ds == null) return;
 
-        foreach (CustomCollider2D collider in customCollider2Ds)
-        {
-            collider.CalculateCollisions(customCollider2Ds);
-        }
+        foreach (var item in customSphereColliders2Ds)
+            item.CheckCollision(customSphereColliders2Ds);
     }
 
     private void OnDestroy()

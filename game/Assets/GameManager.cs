@@ -4,16 +4,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-//public enum GameState {
-//    Play,
-//    Pause,
-//    Win,
-//    Loose
-//}
-
 public class GameManager : MonoBehaviour
 {
-    //public GameState gameState;
     private static GameManager instance;
 
     public event Action OnRestartGame;

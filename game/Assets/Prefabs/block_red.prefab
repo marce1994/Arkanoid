@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7317393311460556795}
   - component: {fileID: 7317393311460556794}
-  - component: {fileID: 1564663942002993701}
+  - component: {fileID: 5036725459348666435}
   - component: {fileID: 6880413478076592914}
   m_Layer: 0
   m_Name: block_red
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1564663942002993701
+--- !u!114 &5036725459348666435
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,14 +92,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7317393311460556788}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 567ca621d60180f44bd8bd509fb6d4fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 77ac98cfe100b244aa43ca3a3237ef48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ColliderType: 1
-  width: 15
-  heigth: 7
-  radius: 3.6
-  centerOffset: {x: -0.5, y: 0.5, z: 0}
+  Offset: {x: -0.53, y: 0.5, z: 0}
+  Width: 14.97
+  Height: 7
 --- !u!114 &6880413478076592914
 MonoBehaviour:
   m_ObjectHideFlags: 0

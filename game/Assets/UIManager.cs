@@ -31,7 +31,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         score = 0;
-        lives = 3;
+        lives = 30;
 
         hightScore = PlayerPrefs.GetInt("hight_score", 0);
         UpdateUI();

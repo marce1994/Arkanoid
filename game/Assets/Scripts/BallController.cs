@@ -40,15 +40,17 @@ public class BallController : MonoBehaviour
     {
         if(difficultyMultiplier < 5)
             difficultyMultiplier += Time.deltaTime / 10;
-
-        //rigidbody.mass = difficultyMultiplier;
     }
 
     private void onCollisionEnter(CustomCollision col)
     {
         AudioSource.PlayClipAtPoint(racket_col_audioclip, Camera.main.transform.position, 1);
 
-        float x = hitFactor(transform.position, col.collider.transform.position, col.collider.width);
+        float x = 0;
+
+        if (col.collider is CustomBoxCollider2D)
+            x = hitFactor(transform.position, col.collider.transform.position, (col.collider as CustomBoxCollider2D).Width);
+
         Bounce(col.normal);
 
         Vector2 dir = rigidbody.Velocity;

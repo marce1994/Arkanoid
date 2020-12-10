@@ -4,7 +4,7 @@ public class CustomRigidBody2D : MonoBehaviour
 {
     private Vector3 _direction;
     public float gravity = 1f;
-    public float mass = 1f;
+    public float force_scaler = 100f;
 
     public Vector3 Velocity
     {
@@ -17,9 +17,10 @@ public class CustomRigidBody2D : MonoBehaviour
         _direction = Vector3.up;
     }
 
+    // EXAMEN: Gravedad
     private void Update()
     {
-        _direction -= Vector3.down * Time.deltaTime * - gravity * mass;
-        transform.position += _direction * Time.deltaTime * 100;
+        _direction -= Vector3.down * Time.deltaTime * - gravity;
+        transform.position += _direction * Time.deltaTime * force_scaler;
     }
 }

@@ -22,9 +22,9 @@ public class RacketController : MonoBehaviour
     {
         if (!col.collider.name.Contains("border")) return;
 
-        if (col.collisionPoint.x > transform.position.x)
-            rigthCollider = true;
         if (col.collisionPoint.x < transform.position.x)
+            rigthCollider = true;
+        if (col.collisionPoint.x > transform.position.x)
             leftCollider = true;
     }
 
@@ -32,15 +32,15 @@ public class RacketController : MonoBehaviour
     {
         if (!col.collider.name.Contains("border")) return;
 
-        if (col.collisionPoint.x > transform.position.x)
-            rigthCollider = false;
         if (col.collisionPoint.x < transform.position.x)
+            rigthCollider = false;
+        if (col.collisionPoint.x > transform.position.x)
             leftCollider = false;
     }
 
     private void Update()
     {
-        HandleInputs();    
+        HandleInputs();
     }
 
     private void HandleInputs() {
